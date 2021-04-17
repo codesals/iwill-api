@@ -3,16 +3,16 @@ const cors = require("cors");
 const ip = require("ip");
 const db = require("./db/models");
 
-const passport = require("passport");
-const { localStrategy } = require("./middleware/passport");
+// const passport = require("passport");
+// const { localStrategy } = require("./middleware/passport");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(passport.initialize());
-app.use(passport.initialize());
-passport.use(localStrategy);
+// app.use(passport.initialize());
+// app.use(passport.initialize());
+// passport.use(localStrategy);
 
 //path not found middleware
 app.use((_, response, __) => {
