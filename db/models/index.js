@@ -43,4 +43,36 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.User.hasMany(db.Habit, {
+  foreignKey: "userId",
+  // allowNull: false,
+  as: "habit",
+});
+
+db.User.hasMany(db.Feedback, {
+  foreignKey: "userId",
+  // allowNull: false,
+  as: "feedbacks",
+});
+
+db.Habit.hasMany(db.Feedback, {
+  foreignKey: "habitId",
+  // allowNull: false,
+  as: "feedbacks",
+});
+
+db.Habit.belongsTo(db.User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+db.Feedback.belongsTo(db.Habit, {
+  foreignKey: "habitId",
+  as: "habit",
+});
+db.Feedback.belongsTo(db.User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
 module.exports = db;
