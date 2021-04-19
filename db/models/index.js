@@ -76,3 +76,4 @@ db.Feedback.belongsTo(db.User, {
 });
 
 module.exports = db;
+
