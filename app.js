@@ -40,7 +40,7 @@ const run = async () => {
   try {
     await db.sequelize.sync({ alter: true });
     console.log("Connection to the database successful!");
-    await app.listen( 8000 , () => { 
+    await app.listen( process.env.PORT , () => { 
       console.log(
         `Express application running on ${ip.address()}:${process.env.PORT}`
       );
