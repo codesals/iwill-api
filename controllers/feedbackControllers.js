@@ -10,7 +10,7 @@ exports.feedbackList = async (req, res, next) => {
       include: [
         {
           model: Habit,
-          as: "habit",
+          as: "habits",
           attributes: ["name"],
         },
         { model: User, as: "user", attributes: ["username"] },

@@ -5,7 +5,6 @@ const {
   feedbackList,
   feedbackCreate,
   feedbackDelete,
-  feedbackUpdate,
   fetchFeedback,
 } = require("../controllers/feedbackControllers");
 

@@ -42,7 +42,7 @@ exports.habitDelete = async (req, res, next) => {
   }
 };
 
-exports.fetchHabit = async (req, res, next) => {
+exports.fetchHabits = async (req, res, next) => {
   const { habitID } = req.params;
   try {
     const habit = await Habit.findByPk(habitID, {

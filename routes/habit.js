@@ -5,12 +5,12 @@ const {
   habitList,
   habitCreate,
   habitDelete,
-  fetchHabit,
+  fetchHabits,
 } = require("../controllers/habitControllers");
 
 router.get("/", habitList);
 router.post("/", habitCreate);
 router.delete("/:habitID", habitDelete);
-router.get("/:habitID", fetchHabit);
+router.get("/:habitID", fetchHabits);
 
 module.exports = router;

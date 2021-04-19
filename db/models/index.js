@@ -46,7 +46,7 @@ db.Sequelize = Sequelize;
 db.User.hasMany(db.Habit, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "habit",
+  as: "habits",
 });
 
 db.User.hasMany(db.Feedback, {
@@ -68,7 +68,7 @@ db.Habit.belongsTo(db.User, {
 
 db.Feedback.belongsTo(db.Habit, {
   foreignKey: "habitId",
-  as: "habit",
+  as: "habits",
 });
 db.Feedback.belongsTo(db.User, {
   foreignKey: "userId",
