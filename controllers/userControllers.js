@@ -26,35 +26,7 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.edit_profile = async (req, res, next) => {
-  try {
-    const { userId } = req.params; // to get user id from request params.
 
-    const user = await User.findOne({
-      where: {
-        id: userId,
-      },
-    }); // get the user of that specific id
-
-    if (user) {
-      user.fullname = req.body.fullname ? req.body.fullname : user.fullname;
-      user.password = req.body.password ? req.body.password : user.password;
-      user.email = req.body.email ? req.body.email : user.email;
-      user.photo = req.body.photo ? req.body.photo : user.photo;
-      user.date_of_birth = req.body.date_of_birth
-        ? req.body.date_of_birth
-        : user.date_of_birth;
-      user.username = req.body.username ? req.body.username : user.username;
-      user.phone = req.body.phone ? req.body.phone : user.phone;
-      await user.save(); // update and then save all the attributes accourding to the values provided.
-      res.send("Updated");
-    } else {
-      res.send("User not found");
-    }
-  } catch (error) {
-    next(error);
-  }
-};
 
 exports.signin = async (req, res) => {
   const user = req.body;
@@ -79,22 +51,32 @@ exports.signin = async (req, res) => {
   }
 };
 
-exports.signout = async (req, res) => {
-  const user = req.body;
-  const payload = {
-    id: user.id,
-    username: user.username,
-  };
-  const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
-  const isSignin = await Token.findOne({
-    where: {
-      token: token,
-    },
-  }); // Check if a user a signed in already.
-  if (isSignin) {
-    await isSignin.destroy();
-    res.json({ message: "Successfully Signed Out" }); // If yes then sign out the user.
-  } else {
-    res.json({ message: "Already Signed Out" }); // Otherwise send response that the user is already signed out.
-  }
-};
+// exports.edit_profile = async (req, res, next) => {  //auth and itwill get from req.body
+//   try {
+//     const { userId } = req.params; // to get user id from request params.
+
+//     const user = await User.findOne({
+//       where: {
+//         id: userId,
+//       },
+//     }); // get the user of that specific id
+
+//     if (user) { 
+//       user.fullname = req.body.fullname ? req.body.fullname : user.fullname;
+//       user.password = req.body.password ? req.body.password : user.password;
+//       user.email = req.body.email ? req.body.email : user.email;
+//       user.photo = req.body.photo ? req.body.photo : user.photo;
+//       user.date_of_birth = req.body.date_of_birth
+//         ? req.body.date_of_birth
+//         : user.date_of_birth;
+//       user.username = req.body.username ? req.body.username : user.username;
+//       user.phone = req.body.phone ? req.body.phone : user.phone;
+//       await user.save(); // update and then save all the attributes accourding to the values provided.
+//       res.send("Updated");
+//     } else {
+//       res.send("User not found");
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };

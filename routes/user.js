@@ -4,19 +4,20 @@ const router = express.Router();
 const db = require("../db/models");
 const { Op } = require("sequelize");
 
-/* GET users listing. */
-
-router.get("/", async (req, res) => {
-  const users = await db.User.findAll();
-  res.json(users);
-});
-
 const {
   signup,
   signin,
   signout,
   edit_profile,
 } = require("../controllers/userControllers");
+
+/* GET users listing. */
+// router.get("/", async (req, res) => {
+//   const users = await db.User.findAll(); //edit exclude 
+//   res.json(users);
+// });
+
+
 
 const tokenTimeOut = async () => {
   //Function that checks if the expiry time of any user token has passed.
@@ -41,12 +42,7 @@ router.post(
   signin
 );
 
-router.post(
-  "/signout",
-  passport.authenticate("local", { session: false }),
-  signout
-);
 
-router.patch("/edit/:userId", edit_profile);
+// router.put("/edit/:userId", edit_profile);
 
 module.exports = router;
