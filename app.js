@@ -11,13 +11,19 @@ const { localStrategy } = require("./middleware/passport");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+//******************* routes must be after middleware y3ny after passport*******************
 app.use("/habit", habitRoutes);
 app.use("/feedback", feedbackRoutes);
 // app.use("/user", userRoutes);
+//***********************************************************************************************
+
 
 app.use(passport.initialize());
 app.use(passport.initialize());
 passport.use(localStrategy);
+
+//*******************kindly move your routes here **************************************
 
 //path not found middleware
 app.use((_, response, __) => {
