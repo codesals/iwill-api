@@ -7,12 +7,13 @@ exports.habitList = async (req, res, next) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-
+      //******************* userid ? just like fetchHabit**************************************
       include: {
         model: User,
         as: "user",
         attributes: ["username"],
       },
+      //****************************************************************************
     });
     res.json(habits);
   } catch (error) {
