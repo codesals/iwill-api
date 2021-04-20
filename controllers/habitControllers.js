@@ -63,3 +63,16 @@ exports.fetchHabits = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.habitCompleted = async (req, res, next) => {
+  const { habitID } = req.params;
+  try {
+    const foundHabit = await Habit.findByPk(habitID);
+    if (foundHabit) {
+      const completedHabit = await foundHabit.update(req.body);
+      res.status(200).json(completedHabit);
+    } else res.status(404).json({ message: "Habit not found!" });
+  } catch (error) {
+    next(error);
+  }
+};

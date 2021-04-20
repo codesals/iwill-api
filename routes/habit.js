@@ -7,6 +7,7 @@ const {
   habitCreate,
   habitDelete,
   fetchHabits,
+  habitCompleted,
 } = require("../controllers/habitControllers");
 
 router.get("/", habitList);
@@ -17,8 +18,12 @@ router.delete(
   habitDelete
 );
 router.get("/:habitID", fetchHabits);
-
 router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
+router.put(
+  "/:habitID",
+  passport.authenticate("jwt", { session: false }),
+  habitCompleted
+);
 
 // router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
