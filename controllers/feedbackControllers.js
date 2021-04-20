@@ -24,6 +24,7 @@ exports.feedbackList = async (req, res, next) => {
 
 exports.feedbackCreate = async (req, res, next) => {
   try {
+    req.body.userId = req.user.id;
     const newFeedback = await Feedback.create(req.body);
     res.status(201).json(newFeedback);
   } catch (error) {
@@ -36,8 +37,10 @@ exports.feedbackDelete = async (req, res, next) => {
   try {
     const foundFeedback = await Feedback.findByPk(feedbackID);
     if (foundFeedback) {
-      await foundFeedback.destroy();
-      res.status(200).json({ message: "Feedback deleted successfully!" });
+      if (foundFeedback.userId === req.user.id) {
+        await foundFeedback.destroy();
+        res.status(200).json({ message: "Feedback deleted successfully!" });
+      } else res.status(401).json({ message: "UnAuthorized" });
     } else res.status(404).json({ message: "Feedback not found!" });
   } catch (error) {
     next(error);
