@@ -12,8 +12,9 @@ exports.signup = async (req, res, next) => {
     req.body.password = hashedPassword;
     const newUser = await User.create(req.body); // create a new user
     const payload = {
-      id: req.body.id,
-      username: req.body.username,
+      id: newUser.id,
+      username: newUser.username,
+      exp: Date.now() + 900000,
     };
     const token = jwt.sign(JSON.stringify(payload), "asupersecretkey"); // create web token using jwt
     await Token.create({
@@ -26,13 +27,12 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-
-
 exports.signin = async (req, res) => {
-  const user = req.body;
+  const user = req.user;
   const payload = {
     id: user.id,
     username: user.username,
+    exp: Date.now() + 900000,
   };
   const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
   const isSignedin = await Token.findOne({
@@ -61,7 +61,7 @@ exports.signin = async (req, res) => {
 //       },
 //     }); // get the user of that specific id
 
-//     if (user) { 
+//     if (user) {
 //       user.fullname = req.body.fullname ? req.body.fullname : user.fullname;
 //       user.password = req.body.password ? req.body.password : user.password;
 //       user.email = req.body.email ? req.body.email : user.email;
