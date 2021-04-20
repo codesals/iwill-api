@@ -51,32 +51,17 @@ exports.signin = async (req, res) => {
   }
 };
 
-// exports.edit_profile = async (req, res, next) => {  //auth and itwill get from req.body
-//   try {
-//     const { userId } = req.params; // to get user id from request params.
-
-//     const user = await User.findOne({
-//       where: {
-//         id: userId,
-//       },
-//     }); // get the user of that specific id
-
-//     if (user) { 
-//       user.fullname = req.body.fullname ? req.body.fullname : user.fullname;
-//       user.password = req.body.password ? req.body.password : user.password;
-//       user.email = req.body.email ? req.body.email : user.email;
-//       user.photo = req.body.photo ? req.body.photo : user.photo;
-//       user.date_of_birth = req.body.date_of_birth
-//         ? req.body.date_of_birth
-//         : user.date_of_birth;
-//       user.username = req.body.username ? req.body.username : user.username;
-//       user.phone = req.body.phone ? req.body.phone : user.phone;
-//       await user.save(); // update and then save all the attributes accourding to the values provided.
-//       res.send("Updated");
-//     } else {
-//       res.send("User not found");
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+exports.edit_profile = async (req, res, next) => {
+  try {
+    User.update(req.body, {
+      returning: true,
+      where: { id: req.params.userId },
+    })
+      .then(function ([rowsUpdate, [updatedUser]]) {
+        res.json(updatedUser);
+      })
+      .catch(next);
+  } catch (error) {
+    next(error);
+  }
+};

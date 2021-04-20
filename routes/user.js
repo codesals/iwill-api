@@ -11,13 +11,11 @@ const {
   edit_profile,
 } = require("../controllers/userControllers");
 
-/* GET users listing. */
-// router.get("/", async (req, res) => {
-//   const users = await db.User.findAll(); //edit exclude 
-//   res.json(users);
-// });
-
-
+// /* GET users listing. */
+router.get("/", async (req, res) => {
+  const users = await db.User.findAll(); //edit exclude
+  res.json(users);
+ });
 
 const tokenTimeOut = async () => {
   //Function that checks if the expiry time of any user token has passed.
@@ -43,6 +41,6 @@ router.post(
 );
 
 
-// router.put("/edit/:userId", edit_profile);
+router.put("/edit/:userId", edit_profile);
 
 module.exports = router;
