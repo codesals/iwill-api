@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Token = sequelize.define("Token", {
     token: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1234),
       allowNull: false,
       unique: true,
     },
