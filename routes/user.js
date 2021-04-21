@@ -41,6 +41,18 @@ router.post(
 );
 
 
+router.get("/profile/:userId", async (req, res) => {
+  const user = await db.User.findOne({
+    where: { id: req.params.userId },
+    attributes: { exclude: ["password"] },
+  });
+  if (user) {
+    res.json(user);
+  } else {
+    res.send("User not Found");
+  }
+});
+
 router.put("/edit/:userId", edit_profile);
 
 module.exports = router;
