@@ -11,14 +11,15 @@ const {
 } = require("../controllers/habitControllers");
 
 router.get("/", habitList);
-// router.post("/", habitCreate);
-router.delete(
-  "/:habitID",
-  passport.authenticate("jwt", { session: false }),
-  habitDelete
-);
+router.delete("/:habitID", habitDelete);
+// router.delete(
+//   "/:habitID",
+//   passport.authenticate("jwt", { session: false }),
+//   habitDelete
+// );
 router.get("/:habitID", fetchHabits);
 router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
+// router.post("/", habitCreate);
 router.put(
   "/:habitID",
   passport.authenticate("jwt", { session: false }),
