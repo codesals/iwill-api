@@ -18,13 +18,14 @@ router.delete("/:habitID", habitDelete);
 //   habitDelete
 // );
 router.get("/:habitID", fetchHabits);
-router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
-// router.post("/", habitCreate);
-router.put(
-  "/:habitID",
-  passport.authenticate("jwt", { session: false }),
-  habitCompleted
-);
+// router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
+router.post("/", habitCreate);
+router.put("/:habitID", habitCompleted);
+// router.put(
+//   "/:habitID",
+//   passport.authenticate("jwt", { session: false }),
+//   habitCompleted
+// );
 
 // router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
