@@ -1,6 +1,7 @@
 const { User, Token } = require("../db/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+var fs = require("fs");
 
 // The function is being used to sign up a user.
 
@@ -10,54 +11,55 @@ exports.signup = async (req, res, next) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds); // to encrypt password
     req.body.password = hashedPassword;
-    const newUser = await User.create(req.body); // create a new user
-    const payload = {
-      id: newUser.id,
-      username: newUser.username,
-      fullname: newUser.fullname,
-      email: newUser.email,
-      dateOfBirth: newUser.dateOfBirth,
-      phone: newUser.phone,
-      exp: Date.now() + 900000,
-    };
+    const newUser = await User.create({ ...req.body }); // create a new user
+    res.json({ message: "User Created Successfully" });
 
-    const token = jwt.sign(JSON.stringify(payload), "asupersecretkey"); // create web token using jwt
-    console.log(token);
-    await Token.create({
-      token: token,
-      time: Date.now() + 900000,
-    }); // Creating token that will be expired in 15 minutes
-
-    res.json({ authentication: "true", token });
+    // res.json({ authentication: "true", token });
   } catch (error) {
     next(error);
   }
 };
 
 exports.signin = async (req, res) => {
-  const user = await User.findOne({
+  const isSignedin = await Token.findOne({
     where: {
-      username: req.body.username,
+      token: jwt.sign(
+        JSON.stringify({
+          username: req.body.username,
+        }),
+        "asupersecretkey"
+      ),
     },
-  });
-  const payload = {
-    id: user.id,
-    username: user.username,
-    fullname: user.fullname,
-    email: user.email,
-    dateOfBirth: user.dateOfBirth,
-    phone: user.phone,
-    exp: Date.now() + 900000,
-  };
-  const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
- 
-  
-  await Token.create({
-    token: token,
-    time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
-  });
-  res.json({ authentication: "true", token });
-  // }
+  }); // verifying if a user already signed in with the provided credentials.
+  if (isSignedin) {
+    res.json({ authentication: false, message: "Already signed in" }); // if signed in then don't let sign in again
+  } else {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+    const payload = {
+      id: user.id,
+      username: user.username,
+      fullname: user.fullname,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      phone: user.phone,
+      exp: Date.now() + 900000,
+    };
+    const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
+    await Token.create({
+      token: jwt.sign(
+        JSON.stringify({
+          username: payload.username,
+        }),
+        "asupersecretkey"
+      ),
+      time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
+    });
+    res.json({ authentication: "true", token });
+  }
 };
 
 exports.edit_profile = async (req, res, next) => {
@@ -67,7 +69,12 @@ exports.edit_profile = async (req, res, next) => {
       where: { id: req.params.userId },
     })
       .then(function ([rowsUpdate, [updatedUser]]) {
-        res.json(updatedUser);
+        let buff = fs.readFileSync(`./photos/${updatedUser.username}.jpeg`);
+        let base64data = buff.toString("base64");
+        res.json({ ...updatedUser?.dataValues, photo: base64data });
+
+        // let buff1 = new Buffer(base64data, "base64"); string to image
+        // fs.writeFileSync("stack-abuse-logo-out.png", buff1); naming that image
       })
       .catch(next);
   } catch (error) {
