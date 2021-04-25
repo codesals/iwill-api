@@ -15,20 +15,17 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
     },
-    // daily: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: true,
-    // allowNull: false,
-    // },
-    // compeleted: {
-    //   type: DataTypes.BOOLEAN,
-    // defaultValue: true,
-    // allowNull: false,
-    // },
+    daily: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    compeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
 
-    // sharedwith: {
-    //   type: DataTypes.INTEGER,
-    //   //   allowNull: false,
-    // },
+    sharedwith: {
+      type: DataTypes.INTEGER,
+    },
   });
 };

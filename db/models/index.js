@@ -46,19 +46,19 @@ db.Sequelize = Sequelize;
 db.User.hasMany(db.Habit, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "habits",
+  as: "habit",
 });
 
 db.User.hasMany(db.Feedback, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "feedbacks",
+  as: "feedback",
 });
 
 db.Habit.hasMany(db.Feedback, {
   foreignKey: "habitId",
   // allowNull: false,
-  as: "feedbacks",
+  as: "feedback",
 });
 
 db.Habit.belongsTo(db.User, {
@@ -68,7 +68,7 @@ db.Habit.belongsTo(db.User, {
 
 db.Feedback.belongsTo(db.Habit, {
   foreignKey: "habitId",
-  as: "habits",
+  as: "habit",
 });
 db.Feedback.belongsTo(db.User, {
   foreignKey: "userId",
@@ -76,4 +76,3 @@ db.Feedback.belongsTo(db.User, {
 });
 
 module.exports = db;
-
