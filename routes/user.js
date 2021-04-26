@@ -9,13 +9,16 @@ const {
   signin,
   signout,
   edit_profile,
+  fetchUser,
 } = require("../controllers/userControllers");
 
-// /* GET users listing. */
+/* GET users listing. */
 router.get("/", async (req, res) => {
   const users = await db.User.findAll(); //edit exclude
   res.json(users);
- });
+});
+
+router.get("/profile/:userId", fetchUser);
 
 const tokenTimeOut = async () => {
   //Function that checks if the expiry time of any user token has passed.
@@ -40,19 +43,6 @@ router.post(
   signin
 );
 
-
-router.get("/profile/:userId", async (req, res) => {
-  const user = await db.User.findOne({
-    where: { id: req.params.userId },
-    attributes: { exclude: ["password"] },
-  });
-  if (user) {
-    res.json(user);
-  } else {
-    res.send("User not Found");
-  }
-});
-
-router.put("/edit/:userId", edit_profile);
+// router.put("/edit/:userId", edit_profile);
 
 module.exports = router;
