@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     photo: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     dateOfBirth: {
       type: DataTypes.STRING,
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
   });
   return User;
