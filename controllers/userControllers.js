@@ -2,6 +2,7 @@ const { User, Token } = require("../db/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var fs = require("fs");
+const { response } = require("express");
 
 // The function is being used to sign up a user.
 
@@ -77,6 +78,49 @@ exports.edit_profile = async (req, res, next) => {
         // fs.writeFileSync("stack-abuse-logo-out.png", buff1); naming that image
       })
       .catch(next);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUser = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.params.userId },
+      attributes: { exclude: ["password"] },
+    });
+
+    if (user) {
+      let buff = fs.readFileSync(`./photos/${user.username}.jpeg`);
+      let base64data = buff.toString("base64");
+      res.json({ ...user?.dataValues, photo: base64data });
+    } else {
+      res.send("User not Found");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAllUser = async (req, res, next) => {
+  try {
+    var users = await User.findAll({
+      attributes: { exclude: ["password"] },
+    });
+
+    if (users) {
+      // let buff = fs.readFileSync(`./photos/${user.username}.jpeg`);
+      // let base64data = buff.toString("base64");
+      // res.json({ ...user?.dataValues, photo: base64data });
+      users.map((user, index) => {
+        let buff = fs.readFileSync(`./photos/${user.username}.jpeg`);
+        let base64data = buff.toString("base64");
+        users[index] = { ...user?.dataValues, photo: base64data };
+      });
+      res.json({ users: users });
+    } else {
+      res.send("No User in the database");
+    }
   } catch (error) {
     next(error);
   }

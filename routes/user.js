@@ -10,6 +10,8 @@ const {
   signin,
   signout,
   edit_profile,
+  getUser,
+  getAllUser,
 } = require("../controllers/userControllers");
 
 var multer = require("multer");
@@ -22,23 +24,9 @@ const storage = multer.diskStorage({
     callback(null, req.body.username + ".jpeg");
   },
 });
-
 var upload = multer({ storage: storage });
 
 /* GET users listing. */
-router.get("/profile/:userId", async (req, res) => {
-  const user = await db.User.findOne({
-    where: { id: req.params.userId },
-    attributes: { exclude: ["password"] },
-  });
-  if (user) {
-    let buff = fs.readFileSync(`./photos/${user.username}.jpeg`);
-        let base64data = buff.toString("base64");
-        res.json({ ...user, photo: base64data });
-  } else {
-    res.send("User not Found");
-  }
-});
 
 const tokenTimeOut = async () => {
   //Function that checks if the expiry time of any user token has passed.
@@ -64,5 +52,7 @@ router.post(
 );
 
 router.put("/edit/:userId", edit_profile);
+router.get("/profile/:userId", getUser);
+router.get("/", getAllUser);
 
 module.exports = router;
