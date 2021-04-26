@@ -1,7 +1,6 @@
-const { User, Token } = require("../db/models");
+const { User, Token, Habit } = require("../db/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 // The function is being used to sign up a user.
 
 exports.signup = async (req, res, next) => {
@@ -50,8 +49,7 @@ exports.signin = async (req, res) => {
     exp: Date.now() + 900000,
   };
   const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
- 
-  
+
   await Token.create({
     token: token,
     time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
@@ -70,6 +68,29 @@ exports.edit_profile = async (req, res, next) => {
         res.json(updatedUser);
       })
       .catch(next);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.fetchUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findByPk(userId, {
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "password"],
+      },
+      include: {
+        model: Habit,
+        as: "habit",
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+    });
+
+    if (user) res.status(200).json(user);
+    else res.send("User not Found");
   } catch (error) {
     next(error);
   }
