@@ -1,4 +1,4 @@
-const { User, Token } = require("../db/models");
+const { User, Token, Habit } = require("../db/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -34,30 +34,57 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.signin = async (req, res) => {
-  const user = await User.findOne({
-    where: {
-      username: req.body.username,
-    },
-  });
-  const payload = {
-    id: user.id,
-    username: user.username,
-    fullname: user.fullname,
-    email: user.email,
-    dateOfBirth: user.dateOfBirth,
-    phone: user.phone,
-    exp: Date.now() + 900000,
-  };
-  const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
- 
-  
-  await Token.create({
-    token: token,
-    time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
-  });
-  res.json({ authentication: "true", token });
-  // }
+exports.signin = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+    const payload = {
+      id: user.id,
+      username: user.username,
+      fullname: user.fullname,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      phone: user.phone,
+      exp: Date.now() + 900000,
+    };
+    const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
+
+    await Token.create({
+      token: token,
+      time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
+    });
+    // res.json({ authentication: "true", token });
+    if (user) res.status(200).json({ authentication: "true", token });
+    else res.send("User not Found");
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.fetchUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findByPk(userId, {
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "password"],
+      },
+      include: {
+        model: Habit,
+        as: "habits",
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+    });
+
+    if (user) res.status(200).json(user);
+    else res.send("User not Found");
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.edit_profile = async (req, res, next) => {
