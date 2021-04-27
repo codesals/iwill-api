@@ -43,6 +43,6 @@ router.post(
   signin
 );
 
-// router.put("/edit/:userId", edit_profile);
+router.put("/edit/:userId", edit_profile);
 
 module.exports = router;
