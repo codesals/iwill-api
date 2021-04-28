@@ -3,22 +3,30 @@ const passport = require("passport");
 const router = express.Router();
 const db = require("../db/models");
 const { Op } = require("sequelize");
+var fs = require("fs");
 
 const {
   signup,
   signin,
   signout,
   edit_profile,
-  fetchUser,
+  getUser,
+  getAllUser,
 } = require("../controllers/userControllers");
 
-/* GET users listing. */
-router.get("/", async (req, res) => {
-  const users = await db.User.findAll(); //edit exclude
-  res.json(users);
-});
+var multer = require("multer");
 
-router.get("/profile/:userId", fetchUser);
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./photos");
+  },
+  filename: function (req, file, callback) {
+    callback(null, req.body.username + ".jpeg");
+  },
+});
+var upload = multer({ storage: storage });
+
+/* GET users listing. */
 
 const tokenTimeOut = async () => {
   //Function that checks if the expiry time of any user token has passed.
@@ -36,7 +44,7 @@ setInterval(function () {
   tokenTimeOut(); // We can the function to check expired token after every 1 second.
 }, 1000);
 
-router.post("/signup", signup);
+router.post("/signup", upload.single("profile"), signup);
 router.post(
   "/signin",
   passport.authenticate("local", { session: false }),
@@ -44,5 +52,7 @@ router.post(
 );
 
 router.put("/edit/:userId", edit_profile);
+router.get("/profile/:userId", getUser);
+router.get("/", getAllUser);
 
 module.exports = router;
