@@ -3,24 +3,23 @@ const cors = require("cors");
 const ip = require("ip");
 const db = require("./db/models");
 
-const habitRoutes = require("./routes/habit");
-const feedbackRoutes = require("./routes/feedback");
 const userRoutes = require("./routes/user");
+const habitRoutes = require("./routes/habit");
+
 const passport = require("passport");
-const { localStrategy, jwtStrategy } = require("./middleware/passport");
+const { localStrategy } = require("./middleware/passport");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.initialize());
 passport.use(localStrategy);
-passport.use(jwtStrategy);
 
-app.use("/habit", habitRoutes);
-app.use("/feedback", feedbackRoutes);
 app.use("/user", userRoutes);
-
+app.use("/habit", habitRoutes);
 //path not found middleware
 app.use((_, response, __) => {
   response.status(404).json({ message: "Path not found" });
