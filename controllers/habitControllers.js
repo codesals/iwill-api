@@ -1,4 +1,4 @@
-const { Habit, User } = require("../db/models");
+const { Habit, User, HabitPartners } = require("../db/models");
 
 exports.habitList = async (req, res, next) => {
   try {
@@ -10,7 +10,7 @@ exports.habitList = async (req, res, next) => {
 
       include: {
         model: User,
-        as: "user",
+        as: "owner",
         attributes: ["username"],
       },
     });
@@ -52,11 +52,20 @@ exports.fetchHabits = async (req, res, next) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-      include: {
-        model: User,
-        as: "user",
-        attributes: ["id", "username"],
-      },
+      include: [
+        {
+          model: User,
+          as: "owner",
+          // as: "user",
+          attributes: ["id", "username"],
+        },
+        {
+          model: User,
+          // as: "owner",
+          as: "partners",
+          // attributes: ["UserId"],
+        },
+      ],
     });
     res.status(201).json(habit);
   } catch (error) {

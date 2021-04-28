@@ -46,29 +46,44 @@ db.Sequelize = Sequelize;
 db.User.hasMany(db.Habit, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "habit",
+  as: "habit", //prev: habits
 });
 
 db.User.hasMany(db.Feedback, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "feedback",
+  as: "feedback", //prev: feedbacks
 });
 
 db.Habit.hasMany(db.Feedback, {
   foreignKey: "habitId",
   // allowNull: false,
-  as: "feedback",
+  as: "feedback", //prev: feedbacks
+});
+
+db.Habit.belongsToMany(db.User, {
+  // foreignKey: "habitId",
+  // allowNull: false,
+  as: "partners",
+  through: "HabitPartners",
+});
+
+db.User.belongsToMany(db.Habit, {
+  // foreignKey: "userId",
+  // allowNull: false,
+  as: "partners",
+  through: "HabitPartners",
 });
 
 db.Habit.belongsTo(db.User, {
   foreignKey: "userId",
-  as: "user",
+  as: "owner",
+  // as: "user",
 });
 
 db.Feedback.belongsTo(db.Habit, {
   foreignKey: "habitId",
-  as: "habit",
+  as: "habit", //prev: habits
 });
 db.Feedback.belongsTo(db.User, {
   foreignKey: "userId",
