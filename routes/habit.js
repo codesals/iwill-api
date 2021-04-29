@@ -8,6 +8,8 @@ const {
   habitDelete,
   fetchHabits,
   habitCompleted,
+  PartnerHabitList,
+  addPartnerToHabit,
 } = require("../controllers/habitControllers");
 
 router.get("/", habitList);
@@ -17,10 +19,18 @@ router.delete("/:habitID", habitDelete);
 //   passport.authenticate("jwt", { session: false }),
 //   habitDelete
 // );
+
+router.get(
+  "/partners",
+  passport.authenticate("jwt", { session: false }),
+  PartnerHabitList
+);
 router.get("/:habitID", fetchHabits);
+
 // router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
-router.post("/", habitCreate);
+router.post("/", passport.authenticate("jwt", { session: false }), habitCreate);
 router.put("/:habitID", habitCompleted);
+router.put("/:habitID/partner", addPartnerToHabit);
 // router.put(
 //   "/:habitID",
 //   passport.authenticate("jwt", { session: false }),

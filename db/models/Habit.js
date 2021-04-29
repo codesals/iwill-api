@@ -12,20 +12,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       // allowNull: false,
     },
-    image: {
-      type: DataTypes.STRING,
-    },
-    daily: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+    // image: {
+    //   type: DataTypes.STRING,
+    // },
+    // daily: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
     completed: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
 
-    sharedwith: {
-      type: DataTypes.INTEGER,
-    },
+    // sharedwith: {
+    //   type: DataTypes.INTEGER,
+    // },
   });
 };
