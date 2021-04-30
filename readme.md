@@ -10,4 +10,6 @@ DB_USERNAME=postgres
 DB_PASSWORD=fssp21
 DB_NAME=iwill_db
 DB_HOST=127.0.0.1
+JWT_SECRETKEY=iwillapp
+JWT_EXP=9000000
 ```

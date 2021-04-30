@@ -31,25 +31,26 @@ exports.habitList = async (req, res, next) => {
 
 exports.PartnerHabitList = async (req, res, next) => {
   try {
+    console.log(req.user.id);
+    console.log(req.user);
+
     const habits = await Habit.findAll({
-      through: { where: { UserId: req.user.id } },
-
       order: ["id"],
-
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
       include: [
+        // {
+        //   model: User,
+        //   as: "owner",
+        //   // as: "user",
+        //   attributes: ["id", "username"],
+        // },
         {
           model: User,
-          as: "owner",
-          // as: "user",
-          attributes: ["id", "username"],
-        },
-        {
-          model: User,
-          // as: "owner",
           as: "partners",
+          through: { where: { UserId: req.user.id } },
+          // as: "owner",
           attributes: ["id", "username"],
         },
       ],

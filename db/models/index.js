@@ -46,7 +46,7 @@ db.Sequelize = Sequelize;
 db.User.hasMany(db.Habit, {
   foreignKey: "userId",
   // allowNull: false,
-  as: "habit", //prev: habits
+  as: "habits", //prev: habits
 });
 
 db.User.hasMany(db.Feedback, {

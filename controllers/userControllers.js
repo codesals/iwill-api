@@ -17,10 +17,10 @@ exports.signup = async (req, res, next) => {
       email: newUser.email,
       dateOfBirth: newUser.dateOfBirth,
       phone: newUser.phone,
-      exp: Date.now() + 900000,
+      exp: Date.now() + parseInt(process.env.JWT_EXP),
     };
 
-    const token = jwt.sign(JSON.stringify(payload), "asupersecretkey"); // create web token using jwt
+    const token = jwt.sign(JSON.stringify(payload), process.env.JWT_SECRETKEY); // create web token using jwt
     console.log(token);
     await Token.create({
       token: token,
@@ -46,13 +46,13 @@ exports.signin = async (req, res) => {
     email: user.email,
     dateOfBirth: user.dateOfBirth,
     phone: user.phone,
-    exp: Date.now() + 900000,
+    exp: Date.now() + parseInt(process.env.JWT_EXP),
   };
-  const token = jwt.sign(JSON.stringify(payload), "asupersecretkey");
+  const token = jwt.sign(JSON.stringify(payload), process.env.JWT_SECRETKEY);
 
   await Token.create({
     token: token,
-    time: Date.now() + 900000, // otherwise signin the user with expiry time of 15 minutes.
+    time: Date.now() + parseInt(process.env.JWT_EXP), // otherwise signin the user with expiry time of 15 minutes.
   });
   res.json({ authentication: "true", token });
   // }
